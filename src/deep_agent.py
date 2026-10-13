@@ -1,8 +1,16 @@
-from src.utils.nodes import create_analysts, human_feedback,  write_report, write_introduction, write_conclusion, finalize_report
-from src.utils.states import ResearchGraphState
-from langgraph.graph import StateGraph, START, END
+from langgraph.graph import END, START, StateGraph
+
 from src.answering_questions import interview_builder
-from src.utils.edges import initiate_all_interviews
+from utils.edges import initiate_all_interviews
+from utils.nodes import (
+    create_analysts,
+    finalize_report,
+    human_feedback,
+    write_conclusion,
+    write_introduction,
+    write_report,
+)
+from utils.states import ResearchGraphState
 
 # Add nodes and edges 
 builder = StateGraph(ResearchGraphState)

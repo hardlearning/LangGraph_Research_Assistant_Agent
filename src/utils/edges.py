@@ -1,9 +1,10 @@
-from src.utils.states import GenerateAnalystsState, InterviewState, ResearchGraphState
-from langgraph.graph import END
-from dotenv import load_dotenv
 from typing import Literal
+
+from dotenv import load_dotenv
 from langchain.messages import AIMessage, HumanMessage
 from langgraph.types import Send
+
+from utils.states import GenerateAnalystsState, InterviewState, ResearchGraphState
 
 load_dotenv()
 
@@ -23,7 +24,6 @@ def should_continue(state: GenerateAnalystsState) -> Literal["create_analysts", 
     return "dummy"
 
 def route_messages(state: InterviewState, name: str = "expert"):
-
     """ Route between question and answer """
     
     # Get messages
@@ -57,8 +57,7 @@ def initiate_all_interviews(state: ResearchGraphState):
     # Otherwise kick off interviews in parallel via Send() API
     else:
         topic = state["topic"]
-        return [Send("conduct_interview", {"analyst": analyst,
-                                           "messages": [HumanMessage(
-                                               content=f"So you said you were writing an article on {topic}?"
-                                           )
-                                                       ]}) for analyst in state["analysts"]]
+        return [Send("conduct_interview", {
+            "analyst": analyst,
+            "messages": [HumanMessage(content=f"So you said you were writing an article on {topic}?")]
+        }) for analyst in state["analysts"]]

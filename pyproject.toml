@@ -14,3 +14,10 @@ dependencies = [
     "langgraph>=1.2.11",
     "langgraph-cli[inemem,inmem]>=0.4.31",
 ]
+
+[tool.ruff.lint]
+ignore = [
+    "UP006",
+    "UP035",
+    "UP045",
+]

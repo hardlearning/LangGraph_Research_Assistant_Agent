@@ -1,15 +1,26 @@
-from src.utils.states import GenerateAnalystsState, InterviewState, ResearchGraphState
-from src.utils.objects import Perspectives, Analyst
-from src.utils.models import llm
-from langchain.messages import SystemMessage, HumanMessage
-from src.utils.prompts import analyst_instructions, question_instructions, answer_instructions, section_writer_instructions, report_writer_instructions, intro_conclusion_instructions
 from dotenv import load_dotenv
+from langchain.messages import HumanMessage, SystemMessage
 from langchain_core.messages import get_buffer_string
 from langchain_tavily import TavilySearch
-from src.utils.prompts import search_instructions
-from src.utils.states import InterviewState, SearchQuery
 from langgraph.types import interrupt
 
+from utils.models import llm
+from utils.objects import Analyst, Perspectives
+from utils.prompts import (
+    analyst_instructions,
+    answer_instructions,
+    intro_conclusion_instructions,
+    question_instructions,
+    report_writer_instructions,
+    search_instructions,
+    section_writer_instructions,
+)
+from utils.states import (
+    GenerateAnalystsState,
+    InterviewState,
+    ResearchGraphState,
+    SearchQuery,
+)
 
 load_dotenv()
 
@@ -26,9 +37,11 @@ def create_analysts(state: GenerateAnalystsState):
     structured_llm = llm.with_structured_output(Perspectives)
 
     # System message
-    system_message = analyst_instructions.format(topic=topic,
-                                                            human_analyst_feedback=human_analyst_feedback, 
-                                                            max_analysts=max_analysts)
+    system_message = analyst_instructions.format(
+        topic=topic,
+        human_analyst_feedback=human_analyst_feedback,
+        max_analysts=max_analysts
+    )
 
     # Generate question 
     analysts = structured_llm.invoke([SystemMessage(content=system_message)]+[HumanMessage(content="Generate the set of analysts.")])
@@ -107,17 +120,16 @@ def write_section(state: InterviewState):
     analyst = state["analyst"]
 
     if isinstance(analyst, dict):
-            analyst = Analyst.model_validate(analyst)
+        analyst = Analyst.model_validate(analyst)
     
     # Write section using either the gathered source docs from interview (context) or the interview itself (interview)
     system_message = section_writer_instructions.format(focus=analyst.description)
-    section = llm.invoke([SystemMessage(content=system_message)]+[HumanMessage(content=f"Use this source to write your section: {context}")]) 
-                
+    section = llm.invoke([SystemMessage(content=system_message)]+[HumanMessage(content=f"Use this source to write your section: {context}")])
+
     # Append it to state
     return {"sections": [section.content]}
 
 def generate_answer(state: InterviewState):
-    
     """ Node to answer a question """
 
     # Get state

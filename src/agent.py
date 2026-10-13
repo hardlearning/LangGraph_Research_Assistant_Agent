@@ -1,8 +1,8 @@
-from src.utils.states import GenerateAnalystsState
-from src.utils.nodes import create_analysts, human_feedback, dummy
-from src.utils.edges import should_continue
-from langgraph.graph import START, END, StateGraph
+from langgraph.graph import END, START, StateGraph
 
+from utils.edges import should_continue
+from utils.nodes import create_analysts, dummy, human_feedback
+from utils.states import GenerateAnalystsState
 
 # building our graph
 builder = StateGraph(GenerateAnalystsState)

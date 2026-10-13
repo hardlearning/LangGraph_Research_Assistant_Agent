@@ -1,10 +1,12 @@
-from typing_extensions import NotRequired, TypedDict
-from typing import List, Optional
-from src.utils.objects import Analyst
-from langgraph.graph import MessagesState
-from typing_extensions import Annotated
 import operator
+from typing import List, Optional
+
+from langgraph.graph import MessagesState
 from pydantic import BaseModel, Field
+from typing_extensions import Annotated, NotRequired, TypedDict
+
+from utils.objects import Analyst
+
 
 class GenerateAnalystsState(TypedDict):
     topic: str # Research topic
@@ -20,7 +22,7 @@ class InterviewState(MessagesState):
     sections: list # Final key we duplicate in outer state for Send() API
 
 class SearchQuery(BaseModel):
-    search_query: str = Field(None, description="Search query for retrieval.")
+    search_query: Optional[str] = Field(None, description="Search query for retrieval.")
 
 class ResearchGraphState(TypedDict):
     topic: str # Research topic

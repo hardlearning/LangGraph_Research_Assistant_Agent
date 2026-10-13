@@ -1,9 +1,9 @@
 # creating Web search tool
 from langchain_tavily import TavilySearch
-from src.utils.prompts import search_instructions
+from utils.prompts import search_instructions
 from langchain.messages import SystemMessage
-from src.utils.states import InterviewState, SearchQuery
-from src.utils.models import llm
+from utils.states import InterviewState, SearchQuery
+from utils.models import llm
 
 tavily_search = TavilySearch(max_results=3)
 
